@@ -6,8 +6,15 @@ describe('Check app', function () {
         await $('#password').setValue('password');
         await $('button').click();
         await browser.pause(3000);
-        await browser.execute('alert(arguments[0] + arguments[1])', 'Hello', ' World!');
-        await browser.pause(3000);
+        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 15000 });
+        await browser.pause(5000);
+        const header = await $('.sticky-top');
+        await browser.execute((elem)=>{elem.remove()}, header );
+        await browser.pause(2000);
+        const alertButton = await $('.btn-danger');
+        await alertButton.click();
+        await browser.pause(2000);        
+        await browser.acceptAlert();
     });
 });
 
