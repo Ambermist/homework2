@@ -1,25 +1,21 @@
 // REMOVE THE BELOW CODE BEFORE START THE EXERCISE
 describe('Check app', function () {
-    it('should login and red item', async function () {
+    before('correct user should login', async function () {
         await browser.url('https://viktor-silakov.github.io/course-sut');
         await $('#login').setValue('walker@jw.com');
         await $('#password').setValue('password');
         await $('button').click();
-        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 10000 });
-        await browser.pause(10000);
-        /*Check correct user logged*/
+        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 15000 });
         const link = await $('div.nav-item a');
         const linkText = await link.getText();
         if(linkText !== 'John Walker') {
             throw new Error('Wrong user')
         }
-        const cookies = await browser.getCookies();
-        if(cookies[0].value !== 'walker@jw.com') {
-            throw new Error('Wrong user')
-        }
-        /*Check sidebar*/
-        const sidebar1block = await $$('#first-nav-block li');
-        for (const item of sidebar1block) {            
+    });
+        
+    it('check for red element on mouseover', async function () {    
+        const menuItems = await $$('#first-nav-block li');
+        for (const item of menuItems) {            
             const text = await item.getText()
             console.log( text);
             await item.moveTo();
@@ -28,10 +24,9 @@ describe('Check app', function () {
             if(color.value ==='rgba(255,0,0,1)'){
                 throw new Error(`The menu Item ${text} has wrong color!`)
             }
-            await browser.pause(1000);
         }
 
-    });
+    })
 });
 
 
