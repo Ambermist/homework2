@@ -5,7 +5,8 @@ describe('Check app', function () {
         await $('#login').setValue('walker@jw.com');
         await $('#password').setValue('password');
         await $('button').click();
-        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 15000 });
+        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 2000 });
+        await $('#spinner').waitForDisplayed({ reverse: true, timeout: 15000 });
         const link = await $('div.nav-item a');
         const linkText = await link.getText();
         if(linkText !== 'John Walker') {
@@ -25,7 +26,6 @@ describe('Check app', function () {
                 throw new Error(`The menu Item ${text} has wrong color!`)
             }
         }
-
     })
 });
 

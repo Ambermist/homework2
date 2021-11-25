@@ -32,24 +32,51 @@ function stopAllNodes(){
 }
 
 describe('Message Sending', function () {
-    it('should send message to Mars without error', function () {
-        let tokens = startAllNodes();
-        const response = sendMessage('Hello', 'Mars', tokens.mars);
-        assertResponse(response, 'Success');
-        stopAllNodes()
-    });
+    let tokens;
+    beforeEach('Switch on nodes & get tokens', function() {
+        tokens = startAllNodes();
+    })
+    afterEach('Switch off nodes', function() {
+        stopAllNodes();
+    })
 
-    it('should send message to Earth without error', function () {
-        let tokens = startAllNodes();
-        const response = sendMessage('Hello', 'Earth', tokens.earth);
-        assertResponse(response, 'Success');
-        stopAllNodes()
-    });
+    context('Send messages successfully', function(){
+        it('should send message to Mars without error', function () {
+            const response = sendMessage('Hello', 'Mars', tokens.mars);
+            assertResponse(response, 'Success');
+        });
+    
+        it('should send message to Earth without error', function () {
+            const response = sendMessage('Hello', 'Earth', tokens.earth);
+            assertResponse(response, 'Success');
+        });        
+    })
 
-    it('should send message to Earth with "Security Error"', function () {
-        startAllNodes();
-        const response = sendMessage('Hello', 'Earth', 'X0000');
-        assertResponse(response, 'Security Error');
-        stopAllNodes()
-    });
+    context('Send messages with invalid tokens', function(){
+        it('should send message to Mars with "Security Error"', function () {
+            const response = sendMessage('Hello', 'Mars', '111');
+            assertResponse(response, 'Security Error');
+        });
+    
+        it('should send message to Earth with "Security Error"', function () {
+            const response = sendMessage('Hello', 'Earth', '11');
+            assertResponse(response, 'Security Error');
+        });        
+    })
+
+    context('Send messages to Mars without Satelite', function(){
+        beforeEach('', function() {
+            stopSatelite();
+        })
+        it('should send message to Mars with "Service is unavailable" error (valid token)', function () {
+            const response = sendMessage('Hello', 'Mars', tokens.mars);
+            assertResponse(response, 'Service is unavailable');
+        });
+    
+        it('should send message to Mars with "Service is unavailable" error (invalid token)', function () {
+            const response = sendMessage('Hello', 'Mars', '11');
+            assertResponse(response, 'Service is unavailable');
+        });        
+    })
+    
 })

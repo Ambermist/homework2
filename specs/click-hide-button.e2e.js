@@ -5,7 +5,8 @@ describe('Check app', function () {
         await $('#login').setValue('walker@jw.com');
         await $('#password').setValue('password');
         await $('button').click();
-        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 15000 });
+        await $('#spinner').waitForDisplayed({ reverse: false, timeout: 2000 });
+        await $('#spinner').waitForDisplayed({ reverse: true, timeout: 15000 });
         const header = await $('.sticky-top');
         await browser.execute((elem)=>{elem.remove()}, header );
         const alertButton = await $('.btn-danger');
