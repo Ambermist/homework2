@@ -70,7 +70,8 @@ describe('Check app', function () {
             }            
             if(!resultTableData.every((value, index) => value === expectedData[index])){
                 throw new Error(`Manager2 data is incorrect`)
-            };     
+            };
+            await browser.debug();     
         })
     })  
 
