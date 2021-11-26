@@ -19,7 +19,10 @@ describe('Check app', function () {
             await $('//textarea[@id="description"]').setValue('qwe');
             await $('//input[@id="demo-balance"]').click();
             await $('//input[@id="wait-supervisor"]').click();
-            await $('//input[@id="city"]').setValue('a');
+            const cityField = await $('//input[@id="city"]');
+            await cityField.setValue('a');
+            const cityText = await $('//li[@id="autoComplete_result_0"]').getText();
+            await cityField.setValue(cityText);
             await $('//li[@id="autoComplete_result_0"]').click();
             await $('//button[@type="submit"]').click();
         })
@@ -33,12 +36,42 @@ describe('Check app', function () {
             await $('//input[@id="zip"]').setValue('123');
             await $('//textarea[@id="description"]').setValue('qwe');
             await $('//input[@id="demo-balance"]').click();
-            await $('//input[@id="city"]').setValue('a');
+            const cityField = await $('//input[@id="city"]');
+            await cityField.setValue('a');
+            const cityText = await $('//li[@id="autoComplete_result_1"]').getText();
+            await cityField.setValue(cityText);
             await $('//li[@id="autoComplete_result_1"]').click();
-            await $('//button[@type="submit"]').click();
-            await browser.pause(10000);
+            await $('//button[@type="submit"]').click();                   
         })
     })
-    
+
+    context('Check table data', async function () {
+        it('Data for manager1 should be correct', async function () {
+            await $('//h3[contains(.,"List of Users")]').waitForDisplayed({ reverse: false, timeout: 3000 });
+            let resultTableData = [];
+            const expectedData = ['manager1@gmail.com','manager','12 Main st','floor 1','Sauce - Thousand Island','US','123','qwe','on','on','country'];
+            const tableCells = await $$('//*[text()="manager1@gmail.com"]/../child::*');
+            for (const cell of tableCells) {            
+                const text = await cell.getText();
+                resultTableData.push(text);
+            }            
+            if(!resultTableData.every((value, index) => value === expectedData[index])){
+                throw new Error(`Manager1 data is incorrect`)
+            };
+        })
+        it('Data for manager2 should be correct', async function () {
+            await $('//h3[contains(.,"List of Users")]').waitForDisplayed({ reverse: false, timeout: 3000 });
+            let resultTableData = [];
+            const expectedData = ['manager2@gmail.com','manager','13 Main st','floor 2','Wild Boar - Tenderloin','CA','123','qwe','on',' ','country'];
+            const tableCells = await $$('//*[text()="manager2@gmail.com"]/../child::*');
+            for (const cell of tableCells) {            
+                const text = await cell.getText();
+                resultTableData.push(text);
+            }            
+            if(!resultTableData.every((value, index) => value === expectedData[index])){
+                throw new Error(`Manager2 data is incorrect`)
+            };     
+        })
+    })  
 
 })
